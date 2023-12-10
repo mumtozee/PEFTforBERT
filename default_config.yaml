@@ -1,0 +1,69 @@
+seed: 42
+model_name_or_path: bert-base-cased
+max_seq_length: null
+with_tracking: true
+tokenizer_name: bert-base-cased
+mlm_proba: 0.15
+peft_type: null
+quantized: false
+cls_layer_name: cls
+num_labels: 28996
+
+logger:
+  format: "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+  datefmt: "%m/%d/%Y %H:%M:%S"
+  level: 20
+
+TrainerArgs:
+  lr: !!float 2e-5
+  resume: false
+  weight_decay: 0.01
+  per_device_train_batch_size: 32
+  per_device_eval_batch_size: 32
+  log_steps: 10
+  eval_steps: 100
+  save_steps: 100
+  n_epoch: !!int 1
+  warmup_ratio: 0.1
+  checkpoint_dir: "./checkpoints"
+  max_steps: null
+  max_grad_norm: 1.0
+  gradient_accumulation_steps: 1
+
+
+PeftArgs:
+  lora:
+    task_type: TOKEN_CLS
+    inference_mode: false
+    r: 16
+    lora_alpha: 16
+    lora_dropout: 0.1
+    bias: all
+  
+  qlora:
+    task_type: TOKEN_CLS
+    inference_mode: false
+    r: 32
+    lora_alpha: 64
+    lora_dropout: 0.05
+    bias: none
+
+  prefix_tuning:
+    task_type: TOKEN_CLS
+    inference_mode: false
+    num_virtual_tokens: 20
+
+  prompt_tuning:
+    task_type: TOKEN_CLS
+    num_virtual_tokens: 8
+    prompt_tuning_init_text: "FInd all masked tokens and predict and predict what is hiddne under them."
+
+  p_tuning:
+    task_type: TOKEN_CLS
+    num_virtual_tokens: 20
+    encoder_hidden_size: 128
+  ia3:
+    task_type: TOKEN_CLS
+    target_modules: ["query", "key", "value", "attention.output.dense", "intermediate.dense", "output.dense"]
+    feedforward_modules: ["intermediate.dense", "output.dense"]
+

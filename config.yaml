@@ -1,0 +1,26 @@
+seed: 42
+model_name_or_path: bert-base-cased
+max_seq_length: 492
+with_tracking: true
+tokenizer_name: bert-base-cased
+mlm_proba: 0.15
+peft_type: null
+quantized: false
+
+logger:
+  format: "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+  datefmt: "%m/%d/%Y %H:%M:%S"
+  level: 20
+
+TrainerArgs:
+  lr: !!float 2e-5
+  weight_decay: 0.01
+  per_device_train_batch_size: 32
+  per_device_eval_batch_size: 32
+  log_steps: 10
+  eval_steps: 20
+  save_steps: 20
+  n_epoch: 5
+  warmup_ratio: 0.1
+  checkpoint_dir: "./checkpoints"
+  resume: false
